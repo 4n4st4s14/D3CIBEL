@@ -1,79 +1,67 @@
-var init, context, analyser, source, audio, waveform_array;
+(function() {
+  var ctx = new (window.AudioContext || window.webkitAudioContext)();
+  //var audioElement = document.getElementById('audioElement');
+  var audio = document.createElement('audio');
+  audio.crossOrigin = "anonymous";
+  audio.src = "./audio/RunningModerat.mp3";
+  var audioSrc = ctx.createMediaElementSource(audio);
+  var analyser = ctx.createAnalyser();
+  //bind analyser to media element source
+  audioSrc.connect(analyser);
+  audioSrc.connect(ctx.destination);
+  audio.play();
 
-var frameLooper = function() {
-  window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestionAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-    window.requestAnimationFrame(frameLooper);
+  //number = analyser.frequencyBinCount
+  var frequencyData = new Uint8Array(200);
 
-  waveform_array = new Unit8Array(analyser.frequencyBinCount);
-  analyser.getFrequencyData(waveform_array);
+    var svgHeight = 600,
+        svgWidth = 960;
 
-  var event = new CustomEvent("waveform", {"detail": waveform_array});
-  window.frames[window.frames.length -1].window.document.dispatchEvent(event);
+    var svg = d3.select('body').append('svg')
+        .attr({
+            height: svgHeight,
+            width: svgWidth
+        });
 
-};
+    // continuously loop and update chart with frequency data.
+    function renderChart() {
+        requestAnimationFrame(renderChart);
 
-var existing_iframe = document.getElementById('partymode_iframe');
+        // copy frequency data to frequencyData array.
+        analyser.getByteFrequencyData(frequencyData);
+        // console.log(frequencyData);
 
-if(existing_iframe){
-  document.body.removeChild(existing_iframe);
-} else {
-  //audio = document.getElementByTagName("video")[0];
-   audio = document.createElement('audio');
-   audio.crossOrigin = "anonymous";
-   audio.src = "./audio/RunningModerat.mp3";
+        // scale things to fit
+        var radiusScale = d3.scaleLinear()
+            .domain([0, d3.max(frequencyData)])
+            .range([0, svgHeight/2 -10]);
 
-  if(init != 1){
-    context = new (window.AudioContext || window.webkitAudioContext)();
-    analyser = context.createAnalyser();
-    source = context.createMediaElementSource(audio);
-    source.connect(analyser);
-    analyser.connect(context.destination);
-    audio.play();
-  }
+        var hueScale = d3.scaleLinear()
+            .domain([0, d3.max(frequencyData)])
+            .range([0, 360]);
 
-  var iFrame = document.createElement("iframe");
+       // update d3 chart with new data
+      svg.selectAll('circle')
+           .data(frequencyData)
+           .enter()
+           .append('circle')
+           .attr({
+                r: function(d) { return radiusScale(d); },
+                cx: svgWidth / 2,
+                cy: svgHeight / 2,
+                fill: 'none',
+                'stroke-width': 4,
+                'stroke-opacity': 0.4,
+                stroke: function(d) { return d3.hsl(hueScale(d), 1, 0.5); }
+           });
 
-    iFrame.id='partymode_iframe';
-    iFrame.width= '30%';
-    iFrame.height = '30%';
-    iFrame.style.position = 'fixed';
-    iFrame.style.top = 0;
-    iFrame.style.left = 0;
-    iFrame.style.zIndex = 2000;
-    iFrame.style.border = 0;
-    iFrame.src = chrome.extension.getURL("index.html");
+        circles.exit().remove();
+    }
 
-    console.log("iframe is being injected");
-    document.body.insertBefore(iFrame, document.body.firstChild);
+    // run the loop
+    renderChart();
 
-    frameLooper();
-    init = 1
-}
-// var analyser, canvas, ctx;
-//
-// window.onload = function() {
-//   canvas = document.createElement('canvas');
-//   canvas.width = window.innerWidth;
-//   canvas.height = window.innerHeight;
-//   document.body.appendChild(canvas);
-//   ctx = canvas.getContext('2d');
-//
-//   setupWebAudio();
-// };
-//
-// setupWebAudio = () => {
-//   var audio = document.createElement('audio');
-//   audio.crossOrigin = "anonymous";
-//   audio.src = "./audio/RunningModerat.mp3";
-//   audio.controls = "true";
-//   document.body.appendChild(audio);
-//   audio.style.width = window.innerWidth = "px";
-//
-//   var audioContext = new AudioContext();
-//   analyser = audioContext.createAnalyser();
-//   var source = audioContext.createMediaElementSource(audio);
-//   source.connect(analyser);
-//   analyser.connect(audioContext.destination);
-//   audio.play();
-//
-// }
+    // just for blocks viewer size
+    d3.select(self.frameElement).style('height', '700px');
+
+}());
