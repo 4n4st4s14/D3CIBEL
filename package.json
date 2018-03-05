@@ -1,0 +1,23 @@
+{
+  "name": "d3cibel",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/4n4st4s14/D3CIBEL.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/4n4st4s14/D3CIBEL/issues"
+  },
+  "homepage": "https://github.com/4n4st4s14/D3CIBEL#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
