@@ -1,4 +1,4 @@
-<!doctype html>
+<!-- <!doctype html>
 
 <html lang="en">
 <head>
@@ -12,10 +12,10 @@
 
 
 
-  <!--[if lt IE 9]>
+  <!-[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
   <![endif]-->
-</head>
+<!-- </head>
 
 <body>
 
@@ -23,6 +23,48 @@
   <script src="https://d3js.org/d3.v4.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="./js/script.js"></script>
-  <script src="./js/svg.js"></script>
+
 </body>
+</html> -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>d3 | visualise audio</title>
+    <style>
+      body {
+        font-family: monospace;
+        line-height: 1.5;
+        background-color: #fff;
+        padding: 20px;
+      }
+      button {
+        font-size: 14px;
+        background: #130C0E;
+        color: #7AC143;
+        border: none;
+        outline:none;
+        padding: 4px 8px;
+        letter-spacing: 1px;
+      }
+      button:hover {
+        background: #7AC143;
+        color: #130C0E;
+      }
+    </style>
+  </head>
+
+  <body>
+    <audio id="audioElement" src="./audio/RunningModerat.mp3"></audio>
+    <div>
+      <button onclick="document.getElementById('audioElement').play()">Play &#9658;</button>
+      <button onclick="document.getElementById('audioElement').pause()">Pause ||</button>
+      <button onclick="document.getElementById('audioElement').volume+=0.1">Vol +</button>
+      <button onclick="document.getElementById('audioElement').volume-=0.1">Vol -</button>
+    </div>
+
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="./js/script.js"></script>
+  </body>
 </html>
