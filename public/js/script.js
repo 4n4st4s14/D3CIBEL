@@ -57,9 +57,7 @@
 
         circles.exit().remove();
     }
-
     // run the loop
     renderChart();
-
 
 }());
