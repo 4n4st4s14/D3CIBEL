@@ -32,7 +32,7 @@
         // scale things to fit
         var radiusScale = d3.scale.linear()
             .domain([0, d3.max(frequencyData)])
-            .range([0, svgHeight/2 -10]);
+            .range([0, svgHeight/2 - 10]);
 
         var hueScale = d3.scale.linear()
             .domain([0, d3.max(frequencyData)])
@@ -46,13 +46,13 @@
 
         circles
             .attr({
-                r: function(d) { return radiusScale(d); },
+                r: (d) =>  radiusScale(d),
                 cx: svgWidth / 2,
                 cy: svgHeight / 2,
                 fill: 'none',
                 'stroke-width': 4,
                 'stroke-opacity': 0.4,
-                stroke: function(d) { return d3.hsl(hueScale(d), 1, 0.2); }
+                stroke: (d) => d3.hsl(hueScale(d), 0.9, 0.4)
            });
 
         circles.exit().remove();
